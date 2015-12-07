@@ -16,6 +16,6 @@ before_action :clean_params
 		@results = @search.by("browse",@params)
 	end
 	def clean_params
-		@params = params.permit(:ll,:radius,:limit,:categoryId,:format,clean_params: {})
+		@params = params.permit(:location,:radius,:types,:keyword,:name,:format,clean_params: {})
 	end
 end
