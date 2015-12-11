@@ -1,6 +1,8 @@
 <% search = Search.new %>
-<% results = search.by("browse",params["clean_params"]) %>
-<% unless results['meta']['code'] == 400 || results['response']['venues'].length == 0 %>
+<% response = search.by("browse",@params) %>
+<% meta = response['meta']['code'] %>
+<% unless meta == 400 || response == nil || response.length == 0 %>
+<% results = response['response']['groups'][0]['items'] %>
 <% headers = [
 				'ID',
 				'Name',
@@ -20,29 +22,23 @@
 				] %>
 <%= CSV.generate_line headers %>
 
-<% results['response']['venues'].each do |venue| %>
+<% results.each do |venue| %>
 	<% lat_and_lng = "#{venue['location']['lat']} #{venue['location']['lng']}"%>
 	<%= CSV.generate_line([
-		venue['id'], 
-		venue['name'],
-		venue['contact']['formattedPhone'],
-		venue['contact']['twitter'],
+		venue['venue']['id'], 
+		venue['venue']['name'],
+		venue['venue']['contact']['formattedPhone'],
+		venue['venue']['contact']['twitter'],
 		lat_and_lng,
-		venue['location']['address'],
-		venue['location']['postalCode'],
-		venue['location']['city'],
-		venue['location']['state'],
-		venue['categories'][0]['id'],
-		venue['categories'][0]['shortName'],
-		venue['stats']['checkinsCount'],
-		venue['stats']['usersCount'],
-		venue['url']
+		venue['venue']['location']['address'],
+		venue['venue']['location']['postalCode'],
+		venue['venue']['location']['city'],
+		venue['venue']['location']['state'],
+		venue['venue']['categories'][0]['id'],
+		venue['venue']['categories'][0]['shortName'],
+		venue['venue']['stats']['checkinsCount'],
+		venue['venue']['stats']['usersCount'],
+		venue['venue']['url']
 		]) %>
 <% end %>
 <%end%>
-
-
-
-
-
-

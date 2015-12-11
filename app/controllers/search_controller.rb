@@ -24,7 +24,7 @@ before_action :clean_params
 			puts "&&&&&&#{@params}&&&&&&&"
 			while do_loop == true
 				@response= @search.by("browse",@params)
-				puts "-------#{@response['response']['groups'][0]['items'].length}-------"
+				puts "-------#{@response['response']['groups'][0]['items'].length	}-------"
 				@meta = @response['meta']['code']
 				new_results = @response['response']['groups'][0]['items']
 				@results += new_results
