@@ -1,109 +1,163 @@
 <%= form_tag("/search", method: "get") do %>
-<%= label_tag(:location, "Lat and long") %>
-  <%= text_field_tag(:location,params[:location] )	%>
-  <%= label_tag(:radius, "Radius") %>
-  <%= text_field_tag(:radius,params[:radius]) %>
-   <%= label_tag(:types, "Types") %>
-    <%= text_field_tag(:types,params[:types])%>
-     <%= label_tag(:keyword, "Keyword") %>
-    <%= text_field_tag(:keyword,params[:keyword])%>
-     <%= label_tag(:name, "Name") %>
-     <%= text_field_tag(:name,params[:name])%>
-    <%= submit_tag("Search") %>
+<%= label_tag(:ll, "Lat and long") %>
+<%= text_field_tag(:ll,params[:ll] ) %>
+<%= label_tag(:radius, "Radius") %>
+<%= text_field_tag(:radius,params[:radius]) %>
+<%= label_tag(:limit, "Limit") %>
+<%= text_field_tag(:limit,params[:limit]) %>
+<%= label_tag(:categoryId, "Category") %>
+<%= select_tag(:categoryId, options_for_select([
+	['Food','4d4b7105d754a06374d81259'],
+	['Restaurant','4bf58dd8d48988d1c4941735'],
+	['----------------------','4d4b7105d754a06374d81259'],
+	['American Restaurant','4bf58dd8d48988d14e941735'],
+	['Asian Restaurant','4bf58dd8d48988d142941735'],
+	['Brazilian Restaurant','4bf58dd8d48988d16b941735'],
+	['Buffet','52e81612bcbc57f1066b79f4'],
+	['Burger Joint','4bf58dd8d48988d16c941735'],
+	['Caribbean Restaurant','4bf58dd8d48988d144941735'],
+	['Dessert Shop', '4bf58dd8d48988d1d0941735'],
+	['Diner','4bf58dd8d48988d147941735'],
+	['Eastern European Restaurant','4bf58dd8d48988d109941735'],
+	['Fast Food Restaurant','4bf58dd8d48988d16e941735'],
+	['Food Court','4bf58dd8d48988d120951735'],
+	['Food Truck','4bf58dd8d48988d1cb941735'],
+	['Fried Chicken Joint','4d4ae6fc7a7b7dea34424761'],
+	['Greek Restaurant','4bf58dd8d48988d10e941735'],
+	['Hot Dog Joint','4bf58dd8d48988d16f941735'],
+	['Indian Restaurant','4bf58dd8d48988d10f941735'],
+	['Indonesian Restaurant','4deefc054765f83613cdba6f'],
+	['Italian Restaurant','4bf58dd8d48988d110941735'],
+	['Latin American Restaurant','4bf58dd8d48988d1be941735'],
+	['Mediterranean Restaurant','4bf58dd8d48988d1c0941735'],
+	['Mexican Restaurant','4bf58dd8d48988d1c1941735'],
+	['Middle Eastern Restaurant','4bf58dd8d48988d115941735'],
+	['Pizza Place','4bf58dd8d48988d1ca941735'],
+	['Russian Restaurant','5293a7563cf9994f4e043a44'],
+	['Sandwich Place','4bf58dd8d48988d1c5941735'],
+	['Seafood Restaurant','4bf58dd8d48988d1ce941735'],
+	['South American Restaurant','4bf58dd8d48988d1cd941735'],
+	['Southern / Soul Food Restaurant','4bf58dd8d48988d14f941735'],
+	['Spanish Restaurant','4bf58dd8d48988d150941735'],
+	['Steakhouse','4bf58dd8d48988d1cc941735'],
+	['Turkish Restaurant','4f04af1f2fb6e1c99f3db0bb'],
+	['Ukrainian Restaurant','52e928d0bcbc57f1066b7e96']])) %>
+<%= submit_tag("Search") %>
 <% end %>
-<% unless @results.length == 0 %>
-<% puts "------#{@results}-------"%>
-<table border="1" class="table table-striped">
-	
-	<h2>Results: <%= @results.length%></h2>
-	<br/>
+	<% unless @meta == 400 || @response == nil || @response.length == 0 %>
+	<%= link_to 'Download CSV list', csv_path(format: :csv, clean_params: @params) %>    
+	<table border="1" class="table table-striped">
 
-	<tr id="header">
-		<td>
-			ID
-		</td>
-		<td>
-			Name
-		</td>
-		<td>
-			phone
-		</td>
-		<td>
-			lat and lng
-		</td>
-		<td>
-			address
-		</td>
-		<td>
-			categories
-		</td>
-		<td>
-			Rating
-		</td>
-		<td>
-			restaurant website
-		</td>
-		<td>
-			Monday
-		</td>
-		<td>
-			Tuesday
-		</td>
-		<td>
-			Wednesday
-		</td>
-		<td>
-			Thursday
-		</td>
-		<td>
-			Friday
-		</td>
-		<td>
-			Saturday
-		</td>
-		<td>
-			Sunday
-		</td>
-	</tr>
-	<% @results.each do |venue| %>
-	<tr>
-		<td>
-			<%= venue['result']['id'] %>
-		</td>
-		<td>
-			<%= venue['result']['name'] %>
-		</td>
-		<td>
-			<%= venue['result']['formatted_phone_number'] %>
-		</td>
-		<td>
-			<%= venue['result']['geometry']['location']['lat'] %>
-			<%= venue['result']['geometry']['location']['lng'] %>
-		</td>
-		<td>
-			<%= venue['result']['formatted_address'] %>
-		</td>
-		<td>
-			<% venue['result']['types'].each do |type| %>
-			<%= "#{type} " %>
-			<% end %>
-		</td>
-		<td>
-			<%= venue['result']['rating'] %>
-		</td>
-		<td>
-			<%= venue['result']['website'] %>
-		</td>
-		<% if venue['result']['opening_hours'] != nil %>
-			<% venue['result']['opening_hours']['weekday_text'].each do |day| %>
+		<h2>Results: <%= @results.length%></h2>
+		<br/>
+
+		<tr id="header">
 			<td>
-				<%= day %>
+				ID
 			</td>
-			<% end %>
-		<% end %>
-	</tr>
-	<% end %>
-</table>
+			<td>
+				Name
+			</td>
+			<td>
+				phone
+			</td>
+			<td>
+				twitter
+			</td>
+			<td>
+				lat and lng
+			</td>
+			<td>
+				address
+			</td>
+			<td>
+				zip code
+			</td>
+			<td>
+				city
+			</td>
+			<td>
+				state
+			</td>
+			<td>
+				categorie ids
+			</td>
+			<td>
+				categories
+			</td>
+			<td>
+				checkins
+			</td>
+			<td>
+				user count
+			</td>
+			<td>
+				restaurant website
+			</td>
+			<td>
+				foursquared website
+			</td>
+		</tr>
 
-<% end %>
-	
+		<% @results.each do |venue| %>
+		<tr>
+			<td>
+				<%= venue['venue']['id'] %>
+			</td>
+			<td>
+				<%= venue['venue']['name'] %>
+			</td>
+			<td>
+				<%= venue['venue']['contact']['formattedPhone'] %>
+			</td>
+			<td>
+				<%= venue['venue']['contact']['twitter'] %>
+			</td>
+			<td>
+				<%= "#{venue['venue']['location']['lat']}, #{venue['venue']['location']['lng']}" %>
+			</td>
+			<td>
+				<%= venue['venue']['location']['address'] %>
+			</td>
+			<td>
+				<%= venue['venue']['location']['postalCode'] %>
+			</td>
+			<td>
+				<%= venue['venue']['location']['city'] %>
+			</td>
+			<td>
+				<%= venue['venue']['location']['state'] %>
+			</td>
+			<td>
+				<% venue['venue']['categories'].each do |venue| %>
+				<%= "#{venue['id']} " %>
+				<% end %>
+			</td>
+			<td>
+				<% venue['venue']['categories'].each do |venue| %>
+				<%= "#{venue['shortName']} " %>
+				<% end %>
+			</td>
+			<td>
+				<%= venue['venue']['stats']['checkinsCount'] %>
+			</td>
+			<td>
+				<%= venue['venue']['stats']['usersCount'] %>
+			</td>
+			<td>
+				<a href=<%= venue['venue']['url']%>><%= venue['venue']['url']%></a>
+			</td>
+			<td>
+				<% if venue['venue']['hasMenu'] == true%>
+				<a href=<%= venue['venue']['menu']['url']%>><%= venue['venue']['menu']['url']%></a>
+				<% else %>
+				none
+				<% end %>
+			</td>
+		</tr>
+		<% end %>
+
+	</table>
+<%else%>
+<h2>No Results</h2>
+<%	end%>

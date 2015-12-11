@@ -3,19 +3,10 @@ class Search
 	def by(intent,options)
 		params = ""
 		options.each do |v,k|
-			params += "#{v}=#{k}&"
-		end
-		response = HTTParty.get(URI.encode("https://maps.googleapis.com/maps/api/place/radarsearch/json?#{params}&key=AIzaSyArEAwaJhE_ddpFBMeIwCSdHHbZUq7yaeU"))
-		get_details(JSON.parse(response.body))
-	end
-
-	def get_details(hash)
-		results_array = []
-		hash['results'].each do |result|
-			puts result['place_id']
-			response = HTTParty.get(URI.encode("https://maps.googleapis.com/maps/api/place/details/json?placeid=#{result['place_id']}&key=AIzaSyArEAwaJhE_ddpFBMeIwCSdHHbZUq7yaeU"))
-			results_array << JSON.parse(response.body)
-		end
-		results_array
+            params += "#{v}=#{k}&"
+        end
+        response = HTTParty.get(URI.encode("https://api.foursquare.com/v2/venues/explore?intent=#{intent}&#{params}client_id=DGYOAJXYGFIC5Y44Z5JA5HEU10CXPDF0UKQEZQA4JMPIOVDZ&client_secret=SD1WOKW14QOLFF1PWHJ2HGE3DDZS1OW40HRULDCOXAGXDFGE&v=20140806"))
+        # puts response.body
+        JSON.parse(response.body)
 	end
 end
